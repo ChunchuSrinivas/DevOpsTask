@@ -1,5 +1,5 @@
 # DevOpsTask
-DevOps Task
+This DevOps Task is checkout the code and then build that Code. Dockerize it and store Docker Images in ACR and then finaaly deploy to AKS.
 
 Pre-requisites:
 
