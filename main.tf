@@ -31,10 +31,7 @@ resource "azurerm_storage_container" "blobs" {
   name                  = var.containername
   storage_account_name  = var.storageaccountname
   container_access_type = "private"
-
-  tags                = {
-    env = "dev"
-  }
+ }
 
   depends_on =[
     azurerm_storage_account.stacnt
