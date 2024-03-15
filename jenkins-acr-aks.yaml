@@ -1,51 +1,38 @@
-pipeline {
-    agent any
-
-    environment {
-        registryName = "devopscntnr"
-        registryCredential = 'ACR'
-        registryUrl = 'devopscntnr.azurecr.io'
-    } 
-    
-    stages {
-        stage('checkout') {
-            steps {
-                checkout changelog: false, poll: false, scm: scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Jenkins_Github_Auth', url: 'https://github.com/ChunchuSrinivas/DevOpsTask.git']])
-            }
-        }
-        
-        stage('Source Code Build') {
-            steps {
-                sh "mvn install -DskipTests"
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build registryName
-                }
-            }
-            
-        }
-        
-        stage ("Push Image") {
-            steps {
-                script {
-                    docker.withRegistry( "http://${registryUrl}", registryCredential ) {
-                        dockerImage.push()
-                    }
-                }
-            }
-        }
-        
-        stage ("Deploy to K8S") {
-            steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                    sh "kubectl apply -f jenkins-docker-acr-aks.yml"
-                }
-            }
-        }
-        
-    }
-}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-springboot-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+      - name: my-springboot-app
+        image: devopscntnr.azurecr.io/devopscntnr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8085
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: springboot-app
+    k8s-app: springboot-app
+  name: springboot-app
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8085
+  type: LoadBalancer
+  selector:
+    app: springboot-app
