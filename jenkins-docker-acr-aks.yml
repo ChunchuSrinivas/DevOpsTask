@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-springboot-app
-        image: 
+        image: devopscntnr.azurecr.io/devopscntnr:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8085
