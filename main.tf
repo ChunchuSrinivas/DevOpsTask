@@ -16,13 +16,13 @@ resource "azurerm_storage_account" "stacnt" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
-  depends_on =[
-    azurerm_resource_group.rg
-  ]
+  	depends_on =[
+    	    azurerm_resource_group.rg
+  	]
 
-  tags = {
-    env = "dev"
-  }
+  	tags = {
+   	 env = "dev"
+  	}
 }
 
 #creating container in storage account for terraform backend
@@ -33,11 +33,6 @@ resource "azurerm_storage_container" "blobs" {
   container_access_type = "private"
  }
 
-  depends_on =[
-    azurerm_storage_account.stacnt
-  ]
-}
-
 #creating azure container registry to store docker images
 resource "azurerm_container_registry" "acr" {
   name                = var.containerregistry
@@ -46,13 +41,13 @@ resource "azurerm_container_registry" "acr" {
   sku                 = "Premium"
   admin_enabled       = false
 
-  tags                = {
-    env = "dev"
-  }
+	depends_on =[
+   	  azurerm_resource_group.rg
+ 	]	
 
-  depends_on =[
-    azurerm_resource_group.rg
-  ]
+  	tags = {
+    	 env = "dev"
+  	}	
 }
 
 #creating aks cluster with 1 node
@@ -72,13 +67,13 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     vm_size    = "Standard_D2_v2"
   }
 
-   tags = {
-    env = "dev"
-  }
+	depends_on =[
+    	  azurerm_resource_group.rg
+  	]
 
-  depends_on =[
-    azurerm_resource_group.rg
-  ]
+   	tags = {
+    	  env = "dev"
+ 	 }
 }
 
 output "client_certificate" {
