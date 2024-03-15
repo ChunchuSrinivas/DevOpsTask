@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        registryName = "cprimecontainer"
+        registryName = "devopscntnr"
         registryCredential = 'AzureLogin'
-        registryUrl = 'cprimecontainer.azurecr.io'
+        registryUrl = 'devopscntnr.azurecr.io'
     } 
     
     stages {
