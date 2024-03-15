@@ -13,3 +13,5 @@ Pre-requisites:
 8. Create ACR - Azure Container Registry (To store Docker Image)
 9. Create AKS - Azure Kubernetes Cluster (To Deploy Images)
 10. Create Script file to automate CI CD (From Checkout code to AKS Deployment)
+
+#To check communication between linux and github
