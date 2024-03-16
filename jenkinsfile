@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        registryName = "cprimecontainer"
-        registryCredential = 'AzureLogin'
-        registryUrl = 'cprimecontainer.azurecr.io'
+        registryName = "devopscntnr"
+        registryCredential = 'K8S'
+        registryUrl = 'devopscntnr.azurecr.io'
     } 
     
     stages {
         stage('checkout') {
             steps {
-                checkout changelog: false, poll: false, scm: scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Jenkins_Github_Auth', url: 'https://github.com/ChunchuSrinivas/simple-java-maven-app.git']])
+                checkout changelog: false, poll: false, scm: scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Jenkins_Github_Auth', url: 'https://github.com/ChunchuSrinivas/DevOpsTask.git']])
             }
         }
         
@@ -42,7 +42,7 @@ pipeline {
         stage ("Deploy to K8S") {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8sfile', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                    sh "kubectl apply -f aks-deploy-from-acr.yml"
+                    sh "kubectl apply -f <yaml file name>"
                 }
             }
         }
